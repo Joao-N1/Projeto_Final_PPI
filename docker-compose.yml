@@ -1,0 +1,21 @@
+version: '3.8' # Versão da linguagem de configuração
+
+services:
+  # 1. Serviço da Base de Dados
+  db:
+    image: mariadb:latest # Vai buscar a versão mais recente e oficial do MariaDB
+    environment:
+      MYSQL_ROOT_PASSWORD: admin # Senha do administrador (mantém simples para desenvolvimento)
+      MYSQL_DATABASE: sve_db # Nome da base de dados do teu projeto
+    ports:
+      - "3306:3306" # Liga a porta do contentor à porta do teu computador
+
+  # 2. Serviço do Backend
+  backend:
+    build:
+      context: ./backend # Diz ao Docker para procurar as instruções na pasta 'backend'
+      dockerfile: Dockerfile # O nome do ficheiro de instruções
+    ports:
+      - "8000:8000" # A porta onde o FastAPI vai estar disponível
+    depends_on:
+      - db # Diz ao Docker: "Liga primeiro a base de dados, e só depois o backend"
