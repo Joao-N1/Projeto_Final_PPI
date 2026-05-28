@@ -19,3 +19,4 @@ services:
       - "8000:8000" # A porta onde o FastAPI vai estar disponível
     depends_on:
       - db # Diz ao Docker: "Liga primeiro a base de dados, e só depois o backend"
+    restart: always
