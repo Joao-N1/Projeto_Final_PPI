@@ -1,16 +1,15 @@
+import os
+from dotenv import load_dotenv # Importamos a ferramenta que lê o .env
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# 1. O Endereço da Base de Dados
-# Formato: mysql+pymysql://utilizador:senha@nome_do_contentor:porta/nome_da_base_de_dados
-URL_DA_BASE_DE_DADOS = "mysql+pymysql://root:admin@db:3306/sve_db"
+# Lê o ficheiro .env e carrega os segredos para a memória
+load_dotenv()
 
-# 2. O Motor (Engine)
+# Agora vamos buscar o URL ao nosso "cofre" virtual!
+URL_DA_BASE_DE_DADOS = os.getenv("URL_DA_BASE_DE_DADOS")
+
 motor = create_engine(URL_DA_BASE_DE_DADOS)
-
-# 3. A Sessão (SessionLocal)
 SessaoLocal = sessionmaker(autocommit=False, autoflush=False, bind=motor)
-
-# 4. A Base (Base)
 Base = declarative_base()

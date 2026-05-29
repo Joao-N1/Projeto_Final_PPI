@@ -1,6 +1,9 @@
+import os # NOVA IMPORTAÇÃO
+from dotenv import load_dotenv # NOVA IMPORTAÇÃO
+
 from fastapi import FastAPI, Depends, HTTPException, Security
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import APIKeyHeader # NOVA FERRAMENTA: O Cadeado de Segurança
+from fastapi.security import APIKeyHeader
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import OperationalError
 from sqlalchemy import func
@@ -9,6 +12,9 @@ import time
 from database import motor, SessaoLocal
 import models
 import schemas
+
+# Carrega os segredos do cofre
+load_dotenv()
 
 tentativas = 5
 while tentativas > 0:
@@ -31,13 +37,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# --- 🔒 SISTEMA DE SEGURANÇA (CHAVE FIXA) ---
-CHAVE_MESTRA = "oscares2026" # Podes mudar para a password que quiseres!
+# --- 🔒 SISTEMA DE SEGURANÇA (Agora a ler do .env) ---
+# Vamos buscar a chave ao cofre. Se o cofre falhar, ele usa a segunda opção por segurança
+CHAVE_MESTRA = os.getenv("API_KEY_MESTRA", "chave_de_emergencia") 
 chave_header = APIKeyHeader(name="X-API-Key")
 
 def verificar_chave(chave_recebida: str = Security(chave_header)):
     if chave_recebida != CHAVE_MESTRA:
-        # Se a chave estiver errada, o FastAPI bloqueia a porta e envia erro 403 (Proibido)
         raise HTTPException(status_code=403, detail="Acesso Negado! Chave Mestra Incorreta.")
     return chave_recebida
 
