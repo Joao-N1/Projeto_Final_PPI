@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Votação</title>
+    <script>
+        // Segurança: Se não houver utilizador no localStorage, bloqueia o acesso
+        if (!localStorage.getItem('usuarioLogado')) {
+            alert('Por favor, faça login para conseguir votar.');
+            window.location.href = 'login_page.html';
+        }
+    </script>
+</head>
+<body>
+
+    <h2>Boletim de Voto</h2>
+    <p>Utilizador Ativo: <strong id="nomeUsuario"></strong></p>
+    <hr>
+
+    <div id="contentorCategorias">A carregar categorias...</div>
+
+    <script>
+        // Mostra o utilizador logado no topo
+        const usuarioAtivo = localStorage.getItem('usuarioLogado');
+        document.getElementById('nomeUsuario').textContent = usuarioAtivo;
+
+        // Função que procura as categorias no Python e desenha no ecrã
+        async function carregarCategorias() {
+            try {
+                const response = await fetch('http://localhost:8000/categorias/');
+                if (!response.ok) throw new Error('Erro ao buscar categorias');
+                
+                const categorias = await response.json();
+                const container = document.getElementById('contentorCategorias');
+                container.innerHTML = ''; // Limpa a mensagem de carregamento
+
+                if (categorias.length === 0) {
+                    container.innerHTML = '<p>Nenhuma categoria disponível para votação de momento.</p>';
+                    return;
+                }
+
+                categorias.forEach(cat => {
+                    // Cria uma secção (bloco) para cada categoria
+                    const section = document.createElement('div');
+                    section.style.marginBottom = "30px"; // Pequeno espaçamento visual
+
+                    // O atributo 'name' nos inputs radio usa o ID da categoria. 
+                    // Isso obriga o browser a deixar escolher apenas um candidato por bloco!
+                    section.innerHTML = `
+                        <h3>${cat.nome} (${cat.tipo})</h3>
+                        <form onsubmit="submeterVoto(event, ${cat.id})">
+                            <input type="radio" name="categoria_${cat.id}" value="1" required> Candidato ID: ${cat.cand1_nome} <br>
+                            <input type="radio" name="categoria_${cat.id}" value="2"> Candidato ID: ${cat.cand2_nome} <br>
+                            <input type="radio" name="categoria_${cat.id}" value="3"> Candidato ID: ${cat.cand3_nome} <br>
+                            <input type="radio" name="categoria_${cat.id}" value="4"> Candidato ID: ${cat.cand4_nome} <br><br>
+                            <button type="submit">Submeter Voto nesta Categoria</button>
+                        </form>
+                        <hr>
+                    `;
+                    container.appendChild(section);
+                });
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('contentorCategorias').textContent = 'Erro ao ligar ao servidor.';
+            }
+        }
+
+        // Função disparada ao clicar no botão de votar de qualquer categoria
+        async function submeterVoto(event, categoriaId) {
+            event.preventDefault(); // Impede o recarregamento do formulário
+
+            // Captura o valor do radio button que foi selecionado
+            const formulario = event.target;
+            const opcaoSelecionada = formulario.querySelector(`input[name="categoria_${categoriaId}"]:checked`).value;
+
+            const dadosVoto = {
+                user_nome: usuarioAtivo, // Retirado do localStorage
+                categoria_id: categoriaId,
+                voto: parseInt(opcaoSelecionada) // Converte "1" para o número 1
+            };
+
+            console.log(dadosVoto)
+
+            try {
+                const response = await fetch('http://localhost:8000/votos/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosVoto)
+                });
+
+                const respostaServidor = await response.json();
+
+                /*
+                if (response.ok) {
+                    alert('Sucesso: ' + respostaServidor.message);
+
+                    // Desativa o botão desta categoria para evitar múltiplos cliques seguidos
+                    formulario.querySelector('button').disabled = true;
+                } else {
+                    alert('Erro: ' + respostaServidor.detail);
+                }
+                */
+
+                if (response.ok) {
+                    alert('Sucesso: ' + (respostaServidor.message || "Voto registado!"));
+                    formulario.querySelector('button').disabled = true;
+                } else{
+                    if (respostaServidor.detail && typeof respostaServidor.detail === 'string') {
+                        alert('Erro do Servidor: ' + respostaServidor.detail);
+                    }
+                    else if (respostaServidor.detail && typeof respostaServidor.detail === 'object') {
+                        alert('Erro de Validação: ' + JSON.stringify(respostaServidor.detail));
+                    }
+                    else{
+                        alert('Erro Desconhecido: ' + JSON.stringify(respostaServidor));
+                    }
+                }
+
+            } catch (error) {
+                console.error('Erro no envio do voto:', error);
+                alert('Erro de comunicação com o servidor AAAAHHH.');
+            }
+        }
+
+        // Executa a função assim que a página abre
+        carregarCategorias();
+    </script>
+</body>
+</html>

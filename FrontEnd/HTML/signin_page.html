@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign-In</title>
+</head>
+<body>
+    <h2>Criar Nova Conta</h2>
+    <form id="cadastroForm">
+        <label for="nome">Nome de Usuário:</label><br>
+        <input type="text" id="nome" required><br><br>
+
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" required><br><br>
+
+        <button type="submit">Cadastrar</button>
+    </form>
+
+    <script>
+        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Impede a página de recarregar
+            
+            const nome = document.getElementById('nome').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                // Envia os dados para a rota de cadastro do backend Python
+                const response = await fetch('http://localhost:8000/signin/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, senha })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert('Usuário cadastrado com sucesso!');
+                    //window.location.href = 'login_page.html'; // Redireciona para o login
+                } else {
+                    alert('Erro: ' + data.detail);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Não foi possível conectar ao servidor.');
+            }
+        });
+    </script>
+</body>
+</html>

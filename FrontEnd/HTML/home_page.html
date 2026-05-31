@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Página Inicial</title>
+    <script>
+        // VERIFICAÇÃO DE SEGURANÇA IMEDIATA
+        // Se não houver nada salvo no localStorage, manda de volta para o login
+        if (!localStorage.getItem('usuarioLogado')) {
+            alert('Acesso negado! Por favor, faça login primeiro.');
+            window.location.href = 'login_page.html';
+        }
+    </script>
+</head>
+<body>
+
+    <h1>Bem-vindo à Área Secreta!</h1>
+    
+
+    <hr>
+    <h3>Olha lá a homem page</h3>
+    <p>WOHOO!</p>
+
+    <br>
+    <button id="btnSair">Log out</button>
+
+    <script>
+
+        // Função de Logout (Sair)
+        document.getElementById('btnSair').addEventListener('click', () => {
+            // Apaga as informações do usuário do navegador
+            localStorage.removeItem('usuarioLogado');
+            alert('Sessão terminada!');
+            // Manda de volta para o login
+            window.location.href = 'login_page.html';
+        });
+    </script>
+</body>
+</html>
