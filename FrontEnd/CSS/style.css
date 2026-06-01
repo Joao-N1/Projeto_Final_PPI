@@ -1,0 +1,220 @@
+:root {
+    --gold: #d4af37;
+    --gold-hover: #f3e5ab;
+    --silver: #c0c0c0;
+    --dark-bg: #0a0a0a;
+    --card-bg: #141414;
+    --text-color: #ffffff;
+    --text-secondary: #a0a0a0;
+    --border-color: #2a2a2a;
+    --nav-height: 70px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    min-height: 100vh;
+    background-image: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
+    padding-top: calc(var(--nav-height) + 2rem); /* Espaço para a navbar fixa */
+}
+
+/* NAVIGATION BAR */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
+    background-color: rgba(20, 20, 20, 0.95);
+    border-bottom: 1px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.nav-brand {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--gold);
+}
+
+.btn-logout {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    background: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: var(--gold);
+    color: #000;
+}
+
+/* CONTAINERS */
+.main-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem 4rem 1rem;
+}
+
+h2.page-title {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.user-info {
+    text-align: center;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+    font-size: 0.9rem;
+}
+
+/* CARDS DE VOTAÇÃO E RESULTADOS */
+.category-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.category-card h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--silver);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--gold);
+    padding-left: 1rem;
+}
+
+/* ESTILIZAÇÃO DOS RADIOS */
+.option-container {
+    display: block;
+    position: relative;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    background: #1f1f1f;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.option-container:hover {
+    background: #252525;
+    border-color: #333;
+}
+
+.option-container input {
+    margin-right: 1rem;
+    accent-color: var(--gold);
+}
+
+/* BOTÕES DENTRO DOS CARDS */
+.btn-vote {
+    width: 100%;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, #b38f2d 0%, var(--gold) 50%, #f3e5ab 100%);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: opacity 0.3s;
+}
+
+.btn-vote:disabled {
+    background: #333;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* GRÁFICOS */
+.canvas-wrapper {
+    max-width: 400px;
+    margin: 2rem auto;
+}
+
+/* CONTAINER DA OPÇÃO ATUALIZADO PARA FLEXBOX */
+.option-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem; /* Espaço entre a foto e o texto */
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #1f1f1f;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.option-container:hover {
+    background: #252525;
+    border-color: var(--gold);
+    transform: scale(1.01); /* Pequeno efeito de zoom ao passar o mouse */
+}
+
+/* CONTAINER DOS TEXTOS DENTRO DA OPÇÃO */
+.option-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+}
+
+/* ESTILIZAÇÃO DO POSTER */
+.movie-poster {
+    width: 70px;               /* Largura fixa elegante */
+    height: 100px;             /* Altura proporcional de poster */
+    object-fit: cover;         /* Garante que a imagem não fique distorcida */
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    border: 1px solid #333;
+    background-color: #0a0a0a; /* Fundo caso a imagem falhe ao carregar */
+}

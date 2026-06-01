@@ -5,7 +5,8 @@ from typing import Optional
 class FilmeBase(BaseModel):
     nome: str
     realizador: str
-    #categoria: str
+
+    imagem: str
 
 class FilmeCreate(FilmeBase):
     pass
@@ -13,6 +14,8 @@ class FilmeCreate(FilmeBase):
 class FilmeResponse(FilmeBase):
     id: int
     nome: str
+
+    imagem: str
     class Config:
         from_attributes = True 
 
@@ -21,6 +24,8 @@ class FilmeResponse(FilmeBase):
 class AtorBase(BaseModel):
     nome: str
     filme_participante: str
+
+    imagem: str
     #categoria: str
 
 class AtorCreate(AtorBase):
@@ -28,20 +33,8 @@ class AtorCreate(AtorBase):
 
 class AtorResponse(AtorBase):
     id: int
-    class Config:
-        from_attributes = True
 
-
-# --- ESQUEMAS PARA ELEITORES ---
-class EleitorBase(BaseModel):
-    nome: str
-    numero_estudante: str
-
-class EleitorCreate(EleitorBase):
-    pass
-
-class EleitorResponse(EleitorBase):
-    id: int
+    imagem: str
     class Config:
         from_attributes = True
 
@@ -76,7 +69,7 @@ class UserCreate(BaseModel):
 
 class UserResponse(BaseModel):
     nome: str
-    senha: str #Manter as senha aqui somente durante os testes, REMOVER DEPOIS
+    senha: str
 
     class Config:
         from_attributes = True # Permite ler objetos do SQLAlchemy direto
@@ -111,6 +104,11 @@ class CategoriaResponse(BaseModel):
     cand2_nome: str
     cand3_nome: str
     cand4_nome: str
+
+    cand1_img: str
+    cand2_img: str
+    cand3_img: str
+    cand4_img: str
     
 
     class Config:
