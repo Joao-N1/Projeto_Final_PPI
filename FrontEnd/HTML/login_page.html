@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../CSS/style_login.css">
+</head>
+<body>
+
+    <div class="auth-container">
+            <h2>Acessar Conta</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="nome">Nome de Usuário</label>
+                    <input type="text" id="nome" placeholder="Seu usuário" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" placeholder="Sua senha" required>
+                </div>
+
+                <button type="submit">Entrar</button>
+            </form>
+
+            <div class="footer-link">
+                Não tem uma conta? <a href="signin_page.html">Cadastre-se</a>
+            </div>
+        </div>
+
+    <!-- Antigo sem CSS
+    <h2>Acessar Conta</h2>
+    <form id="loginForm">
+        <label for="nome">Nome de Usuário:</label><br>
+        <input type="text" id="nome" required><br><br>
+
+        <label for="senha">Senha:</label><br>
+        <input type="password" id="senha" required><br><br>
+
+        <button type="submit">Entrar</button>
+    </form>
+    -->
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                // Envia os dados para a rota de login do backend Python
+                const response = await fetch('http://localhost:8000/login/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, senha })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Login bem-sucedido! Bem-vindo, ' + nome);
+
+                    // GUARDA O USUÁRIO NO NAVEGADOR
+                    localStorage.setItem('usuarioLogado', nome);
+
+                    // REDIRECIONA PARA A PÁGINA INICIAL
+                    window.location.href = 'voting_page.html';
+                } else {
+                    alert('Erro: ' + data.detail);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Não foi possível conectar ao servidor.');
+            }
+        });
+    </script>
+</body>
+</html>
